@@ -22,7 +22,6 @@ enum class Month {
     DECEMBER = 12
 };
 
-
 //not used yet?
 enum class Day {
     MONDAY = 1,
