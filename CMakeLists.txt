@@ -9,7 +9,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 #add_library(Logger logger.cpp)
 #target_include_directories(Logger PUBLIC logger.h)
 
-add_executable(logger main.cpp
+add_executable(logger
     logger.h
     logger.cpp
     Constants.h)
