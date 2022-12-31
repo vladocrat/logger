@@ -4,6 +4,7 @@
 #include <iostream>
 #include <mutex>
 #include <ctime>
+#include <cassert>
 
 namespace logging {
 
@@ -12,7 +13,9 @@ static const std::string END_OF_ENTRY =  "------------------end of session------
 static const std::string NUMERICAL_FORMAT = "numerical";
 static const std::string CALENDAR_FORMAT = "calendar";
 
-struct Logger::File
+using namespace constants;
+
+struct FileLogger::File
 {
     File(const std::string& _path)
     {
@@ -38,27 +41,23 @@ struct Logger::File
     bool newSessionStarted;
 };
 
-std::string Logger::timestamp() const
+std::string FileLogger::timestamp() const
 {
     using namespace std::chrono;
+    using namespace logging::constants;
 
     std::string retval = "";
 
     auto now = system_clock::now();
     auto now_c = system_clock::to_time_t(now);
-    struct tm* date = nullptr;
-    localtime_s(date, &now_c);
+    struct tm date;
+    localtime_s(&date, &now_c);
 
-    if (!date)
-    {
-        return "";
-    }
-
-    int hour  = date->tm_hour;
-    int minute = date->tm_min;
-    int second = date->tm_sec;
-    int mon = date->tm_mon;
-    int day = date->tm_mday;
+    int hour  = date.tm_hour;
+    int minute = date.tm_min;
+    int second = date.tm_sec;
+    int mon = date.tm_mon;
+    int day = date.tm_mday;
 
     system_clock::time_point tp = system_clock::now();
     std::time_t tt = system_clock::to_time_t(tp);
@@ -68,32 +67,30 @@ std::string Logger::timestamp() const
     std::string month = utils::monthToStr(static_cast<Month>(mon));
     retval = utils::format(&buffer.front(), month.c_str(), day, hour, minute, fractional_seconds.count());
 
-    delete date;
-
     return retval;
 }
 
-const State Logger::state() const
+const constants::State FileLogger::state() const
 {
     return m_state;
 }
 
-Logger::Logger()
+FileLogger::FileLogger()
 {
 
 }
 
-Logger::~Logger() noexcept
+FileLogger::~FileLogger() noexcept
 {
 
 }
 
-bool Logger::configure(const std::string& path)
+bool FileLogger::configure(const std::string& path)
 {
     //to make sure threads don't ruin states
     std::lock_guard<std::mutex> guard(m_lock);
 
-    if (m_state == State::INIT_SUCCESS)
+    if (m_state == constants::State::INIT_SUCCESS)
     {
         return true;
     }
@@ -104,17 +101,17 @@ bool Logger::configure(const std::string& path)
 
     if (!m_fileImpl->file.is_open())
     {
-        m_state = State::INIT_FAIL;
+        m_state = constants::State::INIT_FAIL;
         return false;
     }
 
-    m_state = State::INIT_SUCCESS;
+    m_state = constants::State::INIT_SUCCESS;
 
     return true;
 }
 
 
-void Logger::log(const std::string& msg, const MsgType loggingType)
+void FileLogger::log(const std::string& msg, const MsgType loggingType)
 {
     //TODO what if disk's size isn't empty;
     std::lock_guard<std::mutex> guard(m_fileImpl->mx);
@@ -158,7 +155,7 @@ void Logger::log(const std::string& msg, const MsgType loggingType)
     innerLog(output);
 }
 
-void Logger::innerLog(const std::string& msg)
+void FileLogger::innerLog(const std::string& msg)
 {
     //std::lock_guard<std::mutex> guard(m_fileImpl->mx);
     m_fileImpl->file << msg;
@@ -197,12 +194,12 @@ std::string format(const std::string &format, Args... args)
 
 const std::string monthToStr(const Month& month)
 {
-    return logging::utils::months.find(month)->second;
+    return months.find(month)->second;
 }
 
 const std::string dayToStr(const Day& day)
 {
-    return logging::utils::days.find(day)->second;
+    return days.find(day)->second;
 }
 
 } //UTILS

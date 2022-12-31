@@ -11,7 +11,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(logger main.cpp
     logger.h
-    logger.cpp)
+    logger.cpp
+    Constants.h)
 
 install(TARGETS logger
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
