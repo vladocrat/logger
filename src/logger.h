@@ -21,7 +21,11 @@ public:
     [[nodiscard]] bool configure(const std::string&);
     void log(const std::string&, const constants::MsgType = constants::MsgType::DEFAULT);
 
-    const constants::State state() const;
+    const constants::InitState state() const { return m_state; }
+    const constants::WriteState writeState() const { return m_writeState; }
+
+    [[nodiscard]] bool initSuccessFul() const { return m_state == constants::InitState::INIT_SUCCESS; }
+    [[nodiscard]] bool writeSuccessFul() const { return m_writeState == constants::WriteState::WRITE_SUCCESS; }
 
     FileLogger& logger() { return *this; }
     FileLogger& operator<<(const std::string& msg) { log(msg); return *this; }
@@ -44,7 +48,8 @@ private:
 
     struct File;
     std::unique_ptr<File> m_fileImpl;
-    constants::State m_state = constants::State::INITIAL;
+    constants::InitState m_state = constants::InitState::INITIAL;
+    constants::WriteState m_writeState = constants::WriteState::INITIAL;
 };
 
 namespace utils {

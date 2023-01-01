@@ -33,9 +33,15 @@ enum class Day {
     SUNDAY = 7
 };
 
-enum class State {
+enum class InitState {
     INIT_SUCCESS,
     INIT_FAIL,
+    INITIAL
+};
+
+enum class WriteState {
+    WRITE_FAIL,
+    WRITE_SUCCESS,
     INITIAL
 };
 

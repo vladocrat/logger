@@ -72,11 +72,6 @@ std::string FileLogger::timestamp() const
     return retval;
 }
 
-const constants::State FileLogger::state() const
-{
-    return m_state;
-}
-
 FileLogger::FileLogger()
 {
 
@@ -92,7 +87,7 @@ bool FileLogger::configure(const std::string& path)
     //to make sure threads don't ruin states
     std::lock_guard<std::mutex> guard(m_lock);
 
-    if (m_state == constants::State::INIT_SUCCESS)
+    if (m_state == constants::InitState::INIT_SUCCESS)
     {
         return true;
     }
@@ -103,11 +98,11 @@ bool FileLogger::configure(const std::string& path)
 
     if (!m_fileImpl->file.is_open())
     {
-        m_state = constants::State::INIT_FAIL;
+        m_state = constants::InitState::INIT_FAIL;
         return false;
     }
 
-    m_state = constants::State::INIT_SUCCESS;
+    m_state = constants::InitState::INIT_SUCCESS;
 
     return true;
 }
@@ -121,11 +116,13 @@ void FileLogger::log(const std::string& msg, const MsgType loggingType)
     if (!m_fileImpl)
     {
         std::cerr << "file isn't initialized" << std::endl;
+        m_writeState = WriteState::WRITE_FAIL;
         return;
     }
 
-    if (m_state != State::INIT_SUCCESS)
+    if (m_state != InitState::INIT_SUCCESS)
     {
+        m_writeState = WriteState::WRITE_FAIL;
         return;
     }
 
@@ -161,6 +158,7 @@ void FileLogger::innerLog(const std::string& msg)
     //std::lock_guard<std::mutex> guard(m_fileImpl->mx);
     m_fileImpl->file << msg;
     m_fileImpl->file.flush();
+    m_writeState = WriteState::WRITE_SUCCESS;
 }
 
 namespace utils {
