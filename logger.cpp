@@ -6,6 +6,8 @@
 #include <ctime>
 #include <cassert>
 
+#include "filelogger.h"
+
 namespace logging {
 
 static const std::string START_OF_ENTRY = "-----------------start of session-----------------\n";
@@ -64,7 +66,7 @@ std::string FileLogger::timestamp() const
     duration<double> fractional_seconds = (tp - system_clock::from_time_t(tt)) + seconds(second);
 
     std::string buffer("%s %02d %02d:%02d:%09.5f");
-    std::string month = utils::monthToStr(static_cast<Month>(mon));
+    std::string month = utils::monthToStr(static_cast<Month>(mon + 1));
     retval = utils::format(&buffer.front(), month.c_str(), day, hour, minute, fractional_seconds.count());
 
     return retval;

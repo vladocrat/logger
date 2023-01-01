@@ -53,7 +53,6 @@ const std::unordered_map<const MsgType, std::string, std::hash<MsgType>> logPref
     {MsgType::DEFAULT, ""}
 };
 
-
 const std::unordered_map<const Month, std::string, std::hash<Month>> months {
     {Month::JANUARY, "January"},
     {Month::FEBRUARY, "February"},

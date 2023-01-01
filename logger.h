@@ -55,25 +55,5 @@ const std::string dayToStr(const constants::Day&);
 } // UTILS
 
 
-
-//if needed to log without marking a msg;
-inline void MESSAGE(const std::string& msg) {
-    FileLogger::instance()->log(msg, constants::MsgType::DEFAULT);
-}
-
-inline void WARN(const std::string& msg) {
-    FileLogger::instance()->log(msg, constants::MsgType::WARN);
-}
-
-inline void ERROR(const std::string &msg)
-{
-    FileLogger::instance()->log(msg, constants::MsgType::ERROR);
-}
-
-inline void INFO(const std::string &msg)
-{
-    FileLogger::instance()->log(msg, constants::MsgType::INFO);
-}
-
 } // LOGGING
 
