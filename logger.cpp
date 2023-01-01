@@ -112,7 +112,6 @@ bool FileLogger::configure(const std::string& path)
     return true;
 }
 
-
 void FileLogger::log(const std::string& msg, const MsgType loggingType)
 {
     //TODO what if disk's size isn't empty;
@@ -205,5 +204,6 @@ const std::string dayToStr(const Day& day)
 }
 
 } //UTILS
+
 } // LOGGING
 

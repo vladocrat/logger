@@ -24,3 +24,6 @@ inline void INFO(const std::string &msg)
 {
     fileLogger->log(msg, logging::constants::MsgType::INFO);
 }
+
+#undef fileLogger
+#define logger() logging::FileLogger::instance()->logger()
