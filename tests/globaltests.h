@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib.h"
+#include "filelogger.h"
 
 TEST(GLOBAL_LOGGER, CONFIGURE)
 {

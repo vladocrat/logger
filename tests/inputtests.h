@@ -1,6 +1,9 @@
 #pragma once
 
-#include "lib.h"
+#include "filelogger.h"
+
+#include <gtest/gtest.h>
+
 #include <string>
 
 TEST(INPUT_READ, CHECK_STD_STRING)
